@@ -5,3 +5,4 @@ com\mycompany\my2dgame\KeyHandler.class
 com\mycompany\my2dgame\tile\TileManager.class
 com\mycompany\my2dgame\My2DGame.class
 com\mycompany\my2dgame\tile\Tile.class
+com\mycompany\my2dgame\CollisionChecker.class
