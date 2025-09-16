@@ -14,7 +14,7 @@ import java.awt.event.KeyListener;
 public class KeyHandler implements  KeyListener{
     
     public boolean upPressed, downPressed, leftPressed, rigthPressed;
-    
+    public boolean pausedAction = false;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -38,8 +38,19 @@ public class KeyHandler implements  KeyListener{
             case KeyEvent.VK_D:
                 rigthPressed = true;
                 break;
+            case KeyEvent.VK_Q:
+                if(pausedAction) {
+                     pausedAction = false;
+                }
+                else {
+                    pausedAction = true;
+                }
+                break;
+            case KeyEvent.VK_C: 
+                
+                break;
             default:
-                throw new AssertionError();
+                
         }
     }
 

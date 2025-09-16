@@ -1,8 +1,9 @@
-com\mycompany\my2dgame\entity\Player.class
 com\mycompany\my2dgame\GamePanel.class
-com\mycompany\my2dgame\entity\Entity.class
-com\mycompany\my2dgame\KeyHandler.class
 com\mycompany\my2dgame\tile\TileManager.class
 com\mycompany\my2dgame\My2DGame.class
 com\mycompany\my2dgame\tile\Tile.class
 com\mycompany\my2dgame\CollisionChecker.class
+com\mycompany\my2dgame\entity\Player.class
+com\mycompany\my2dgame\entity\Entity.class
+com\mycompany\my2dgame\KeyHandler.class
+com\mycompany\my2dgame\entity\Npc.class

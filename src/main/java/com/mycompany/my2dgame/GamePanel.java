@@ -13,7 +13,8 @@ import java.awt.Graphics2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-
+import com.mycompany.my2dgame.entity.Npc;
+import java.awt.Font;
 
 /**
  *
@@ -25,29 +26,31 @@ public class GamePanel extends JPanel implements Runnable {
     final int originalTileSize = 16; // 16x16 para todos os personagens e elementos
     final int scale = 3;
     public final int tileSize = originalTileSize * scale; //40x40 tile O mapa continua lógico em 16x16, mas visualmente aparece maior.
-   public final int maxScreenCol = 16; // horizontal
+    public final int maxScreenCol = 16; // horizontal
     public final int maxScreenRow = 12; // vertical
     public final int screenWidth = tileSize * maxScreenCol; // 760 pixels
     public final int screenHeigth = tileSize * maxScreenRow; // 576 pixels
 
     // configurações do mundo
-    
-    public  final int  maxWorldCol = 50;
-    public  final int maxWorldRow = 50;
-    public  final int worldWidth = tileSize * maxWorldCol;
-    public  final int worldHeigth = tileSize * maxScreenRow;
-    
+    public final int maxWorldCol = 50;
+    public final int maxWorldRow = 50;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeigth = tileSize * maxScreenRow;
+    public boolean paused = false;
 
     // fps
     int FPS = 60;
     TileManager tileM = new TileManager(this);
 
     KeyHandler keyH = new KeyHandler();
+
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
-    
+
     // criando meu player
-   public Player player = new Player(this, keyH);
+    public Player player = new Player(this, keyH);
+    public Npc npc1 = new Npc(this, 23, 12);
+    public Npc npc2 = new Npc(this, 10, 12);
 
     public GamePanel() {
         // definindo largura e altura da tela
@@ -56,12 +59,23 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        
+
+        
 
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
+        
+        
         gameThread.start();
+    }
+    
+    public void pauseGameThread() {
+        
+        
+        
     }
 
     // Criando o GAME LOOP[
@@ -73,7 +87,6 @@ public class GamePanel extends JPanel implements Runnable {
 //        while (gameThread != null) {
 //
 
-    
     ////            long currentTime = System.nanoTime();
 ////            System.out.println("Current Time: " +  currentTime );
 //            // 1 UPDATE: Informações sobre o personagem e posições
@@ -103,14 +116,15 @@ public class GamePanel extends JPanel implements Runnable {
 //
 //    }
     public void run() {
-
+        
+        
         double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
         long currentTime;
         long timer = 0;
-        
-        int drawCount =0;
+
+        int drawCount = 0;
 
         while (gameThread != null) {
             currentTime = System.nanoTime();
@@ -121,13 +135,16 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                update();   // lógica do jogo
+                if(!keyH.pausedAction) {
+                      update();   // lógica do jogo
+                }
+              
                 repaint();  // desenha de novo
                 delta--;    // consome 1 ciclo
                 drawCount++;
             }
-            
-            if(timer >= 1000000000) {
+
+            if (timer >= 1000000000) {
                 System.out.println("FPS: " + drawCount);
                 drawCount = 0;
                 timer = 0;
@@ -138,17 +155,27 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void update() {
 
-      player.update();
+        player.update();
+        npc1.update();
+        npc2.update();
+        
+        
+       
 
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        Graphics g2 = (Graphics2D)g;
-        
+        Graphics g2 = (Graphics2D) g;
+
         tileM.draw((Graphics2D) g2);
         player.draw((Graphics2D) g2);
+        npc1.draw((Graphics2D) g2);
+        npc2.draw((Graphics2D) g2);
+        
+    
+        
 
         g2.dispose();
 
