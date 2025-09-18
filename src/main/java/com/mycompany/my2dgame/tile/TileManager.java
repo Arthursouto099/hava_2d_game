@@ -5,6 +5,7 @@
 package com.mycompany.my2dgame.tile;
 
 import com.mycompany.my2dgame.GamePanel;
+import com.mycompany.my2dgame.entity.Npc;
 import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,9 +27,14 @@ public class TileManager {
         this.gp = gp;
         this.tile = new Tile[10];
         mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
-
+        
+        
+        
+        
+        
         getTileImage();
         loadMap("/maps/world01.txt");
+        
     }
 
     public void getTileImage() {
