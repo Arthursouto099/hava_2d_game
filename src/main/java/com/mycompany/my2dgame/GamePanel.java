@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import com.mycompany.my2dgame.entity.Npc;
+import com.mycompany.my2dgame.object.SuperObject;
 import java.awt.Font;
 
 /**
@@ -46,11 +47,16 @@ public class GamePanel extends JPanel implements Runnable {
 
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
+    public AssetSetter aSetter = new AssetSetter(this);
 
     // criando meu player
     public Player player = new Player(this, keyH);
-    public Npc npc1 = new Npc(this, 23, 12);
-    public Npc npc2 = new Npc(this, 10, 12);
+    public Npc[] npcs = new Npc[10];
+    
+    
+    
+
+    public SuperObject obj[] = new SuperObject[10];
 
     public GamePanel() {
         // definindo largura e altura da tela
@@ -60,22 +66,23 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
         
+        this.npcs[0] = new Npc(this, 23, 12);
+        this.npcs[1] = new Npc(this, 10, 12);
 
-        
+    }
 
+    public void setupGame() {
+        aSetter.setObject();
     }
 
     public void startGameThread() {
         gameThread = new Thread(this);
-        
-        
+
         gameThread.start();
     }
-    
+
     public void pauseGameThread() {
-        
-        
-        
+
     }
 
     // Criando o GAME LOOP[
@@ -87,6 +94,7 @@ public class GamePanel extends JPanel implements Runnable {
 //        while (gameThread != null) {
 //
 
+    
     ////            long currentTime = System.nanoTime();
 ////            System.out.println("Current Time: " +  currentTime );
 //            // 1 UPDATE: Informações sobre o personagem e posições
@@ -116,8 +124,7 @@ public class GamePanel extends JPanel implements Runnable {
 //
 //    }
     public void run() {
-        
-        
+
         double drawInterval = 1000000000 / FPS;
         double delta = 0;
         long lastTime = System.nanoTime();
@@ -135,10 +142,10 @@ public class GamePanel extends JPanel implements Runnable {
             lastTime = currentTime;
 
             if (delta >= 1) {
-                if(!keyH.pausedAction) {
-                      update();   // lógica do jogo
+                if (!keyH.pausedAction) {
+                    update();   // lógica do jogo
                 }
-              
+
                 repaint();  // desenha de novo
                 delta--;    // consome 1 ciclo
                 drawCount++;
@@ -153,14 +160,27 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
+    public void changeMap(String mapFile, int mapIndex) {
+        tileM.loadMap(mapFile);
+
+        // reseta posição do player
+        player.worldX = tileSize * 10;
+        player.worldY = tileSize * 10;
+
+        // reseta os NPCs conforme o mapa
+        aSetter.setNPC(1);
+    }
+
     public void update() {
 
         player.update();
-        npc1.update();
-        npc2.update();
         
-        
-       
+        for(int i = 0; i < this.npcs.length; i++) {
+            if(npcs[i] != null) {
+              npcs[i].update();
+         }
+            
+        }
 
     }
 
@@ -168,14 +188,25 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
 
         Graphics g2 = (Graphics2D) g;
+        // TILE
 
         tileM.draw((Graphics2D) g2);
+
+        // OBJECT
+        for (int i = 0; i < obj.length; i++) {
+            if (obj[i] != null) {
+                obj[i].draw((Graphics2D) g2, this);
+            }
+        }
+
+        //PLAYER
         player.draw((Graphics2D) g2);
-        npc1.draw((Graphics2D) g2);
-        npc2.draw((Graphics2D) g2);
-        
-    
-        
+          for(int i = 0; i < this.npcs.length; i++) {
+            if(npcs[i] != null) {
+              npcs[i].draw((Graphics2D) g2);
+         }
+            
+        }
 
         g2.dispose();
 
