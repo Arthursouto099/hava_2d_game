@@ -6,6 +6,7 @@ package com.mycompany.my2dgame;
 import javax.swing.JOptionPane;
 import com.mycompany.my2dgame.entity.Entity;
 import com.mycompany.my2dgame.entity.Npc;
+import com.mycompany.my2dgame.entity.Orc;
 
 /**
  *
@@ -61,18 +62,18 @@ public class CollisionChecker {
         e1Bottom > e2Top &&
         e1Top < e2Bottom;
 
-    if (colisao) {
-        if(entity2 instanceof Npc) {
-           if(!entity1.IscollisionWithOuther) {
-           entity1.IscollisionWithOuther = true;
+   if (colisao) {
+    if (entity2 instanceof Npc) {
+        if (!entity1.IscollisionWithOuther) {
+            entity1.IscollisionWithOuther = true;
         }
-           
-        
+    } else if (entity2 instanceof Orc) {
+        if (!entity1.isCollisionWithEnemy) {
+            System.out.println("colide");
+            entity1.isCollisionWithEnemy = true;
+        }
     }
-      
-     
-        
-    }
+}
 }
 
 
@@ -181,7 +182,7 @@ public class CollisionChecker {
                         
                         break;
                     case "right":
-                        entity.solidArea.y += entity.speed;
+                        entity.solidArea.x += entity.speed;
                           if(entity.solidArea.intersects(gp.obj[i].solidArea)) {
                                    if(gp.obj[i].collision) {
                                 entity.colisionOn = true;

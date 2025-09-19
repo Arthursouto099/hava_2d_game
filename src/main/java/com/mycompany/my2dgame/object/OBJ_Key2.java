@@ -11,12 +11,9 @@ import javax.imageio.ImageIO;
  *
  * @author Usuario
  */
-public class OBJ_Key extends SuperObject{
-    public String nameRing = "Anel do Poder";
-    public String description = "Forjado nas chamas da Montanha da Perdição, concede força inimaginável ao portador, mas também corrompe sua alma.";
-    
-    public OBJ_Key() {
-        name = "ring 1";
+public class OBJ_Key2 extends SuperObject{
+    public OBJ_Key2() {
+        name = "ring 2";
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));
         }

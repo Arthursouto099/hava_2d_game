@@ -4,6 +4,7 @@
  */
 package com.mycompany.my2dgame;
 
+import com.mycompany.my2dgame.entity.Elf;
 import com.mycompany.my2dgame.entity.Player;
 import com.mycompany.my2dgame.tile.TileManager;
 import java.awt.Color;
@@ -14,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import com.mycompany.my2dgame.entity.Npc;
+import com.mycompany.my2dgame.entity.Orc;
 import com.mycompany.my2dgame.object.SuperObject;
 import java.awt.Font;
 
@@ -51,10 +53,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     // criando meu player
     public Player player = new Player(this, keyH);
+
     public Npc[] npcs = new Npc[10];
-    
-    
-    
+    public Elf[] elfs = new Elf[10];
+    public Orc[] orcs = new Orc[10];
 
     public SuperObject obj[] = new SuperObject[10];
 
@@ -65,9 +67,9 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
-        
+
         this.npcs[0] = new Npc(this, 23, 12);
-        this.npcs[1] = new Npc(this, 10, 12);
+        this.npcs[1] = new Npc(this, 11,9);
 
     }
 
@@ -94,7 +96,6 @@ public class GamePanel extends JPanel implements Runnable {
 //        while (gameThread != null) {
 //
 
-    
     ////            long currentTime = System.nanoTime();
 ////            System.out.println("Current Time: " +  currentTime );
 //            // 1 UPDATE: Informações sobre o personagem e posições
@@ -164,9 +165,6 @@ public class GamePanel extends JPanel implements Runnable {
         tileM.loadMap(mapFile);
 
         // reseta posição do player
-        player.worldX = tileSize * 10;
-        player.worldY = tileSize * 10;
-
         // reseta os NPCs conforme o mapa
         aSetter.setNPC(1);
     }
@@ -174,12 +172,18 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
 
         player.update();
-        
-        for(int i = 0; i < this.npcs.length; i++) {
-            if(npcs[i] != null) {
-              npcs[i].update();
-         }
-            
+
+        for (int i = 0; i < this.npcs.length; i++) {
+            if (npcs[i] != null) {
+                npcs[i].update();
+            }
+
+        }
+        for (int i = 0; i < this.orcs.length; i++) {
+            if (orcs[i] != null) {
+                orcs[i].update();
+            }
+
         }
 
     }
@@ -201,11 +205,17 @@ public class GamePanel extends JPanel implements Runnable {
 
         //PLAYER
         player.draw((Graphics2D) g2);
-          for(int i = 0; i < this.npcs.length; i++) {
-            if(npcs[i] != null) {
-              npcs[i].draw((Graphics2D) g2);
-         }
-            
+        for (int i = 0; i < this.npcs.length; i++) {
+            if (npcs[i] != null) {
+                npcs[i].draw((Graphics2D) g2);
+            }
+
+        }
+        for (int i = 0; i < this.orcs.length; i++) {
+            if (orcs[i] != null) {
+                orcs[i].draw((Graphics2D) g2);
+            }
+
         }
 
         g2.dispose();

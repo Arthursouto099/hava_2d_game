@@ -94,6 +94,7 @@ public void update() {
 
     colisionOn = false;
     gp.cChecker.checkTile(this);
+    int objIndex = gp.cChecker.checkObject(this, false);
  
 
 

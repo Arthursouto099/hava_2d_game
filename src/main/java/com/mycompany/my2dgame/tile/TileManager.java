@@ -33,7 +33,7 @@ public class TileManager {
         
         
         getTileImage();
-        loadMap("/maps/world01.txt");
+        loadMap("/maps/map01.txt");
         
     }
 

@@ -1,10 +1,15 @@
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Npc.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\object\OBJ_KeyDoor.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\CollisionChecker.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Elf.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\My2DGame.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Entity.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\services\RingService.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\object\OBJ_Door.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\object\OBJ_Key.java
-C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Enemy.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Orc.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\KeyHandler.java
+C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\object\OBJ_Key2.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\tile\Tile.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\AssetSetter.java
 C:\2d\hava_2d_game\src\main\java\com\mycompany\my2dgame\entity\Player.java

@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Enemy extends Entity {
+public class Elf extends Entity {
 
     GamePanel gp;
    
@@ -30,7 +30,7 @@ public class Enemy extends Entity {
     public  int worldMYult;
     
 
-    public Enemy(GamePanel gp, int worldXMult, int worldYMult ) {
+    public Elf(GamePanel gp, int worldXMult, int worldYMult ) {
         this.gp = gp;
       
 

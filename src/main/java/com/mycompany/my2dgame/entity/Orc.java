@@ -17,7 +17,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
 
-public class Enemy extends Entity {
+public class Orc extends Entity {
 
     GamePanel gp;
    
@@ -30,7 +30,7 @@ public class Enemy extends Entity {
     public  int worldMYult;
     
 
-    public Enemy(GamePanel gp, int worldXMult, int worldYMult ) {
+    public Orc(GamePanel gp, int worldXMult, int worldYMult ) {
         this.gp = gp;
       
 
@@ -59,14 +59,14 @@ public class Enemy extends Entity {
     public void getPlayerImage() {
         // lendo as imagens
         try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_left_1.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_right_1.png"));
+            up1 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_up_1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_up_2.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_down_1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_down_2.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_left_1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_left_2.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_right_1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/orc/orc_right_2.png"));
 
         } catch (IOException e) {
             e.printStackTrace();
