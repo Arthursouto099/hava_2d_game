@@ -29,8 +29,8 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
-    public int hp = 60;
-    public int atk;
+    public int hp = 100;
+    public int atk = 25;
     public String dialogText = "";
     public int dialogTimer = 0;
     public Color dialogColor = Color.WHITE;
@@ -80,6 +80,51 @@ public class Player extends Entity {
         }
     }
 
+    public void attackBoss() {
+        long currentTime = System.currentTimeMillis();
+        Rectangle playerArea = new Rectangle(
+                worldX,
+                worldY,
+                solidArea.width,
+                solidArea.height
+        );
+
+// Ataca os bosses do array gp.boss
+        for (int i = 0; i < gp.boss.length; i++) {
+            if (gp.boss[i] != null) {
+                Rectangle bossArea = new Rectangle(
+                        gp.boss[i].worldX,
+                        gp.boss[i].worldY,
+                        gp.boss[i].solidArea.width,
+                        gp.boss[i].solidArea.height
+                );
+
+                if (playerArea.intersects(bossArea) && gp.boss[i].hp > 0) {
+                    gp.boss[i].hp -= this.atk;
+
+                }
+            }
+        }
+
+// Ataca os bosses do array gp.boss2
+        for (int i = 0; i < gp.boss2.length; i++) {
+            if (gp.boss2[i] != null) {
+                Rectangle bossArea = new Rectangle(
+                        gp.boss2[i].worldX,
+                        gp.boss2[i].worldY,
+                        gp.boss2[i].solidArea.width,
+                        gp.boss2[i].solidArea.height
+                );
+
+                if (playerArea.intersects(bossArea) && gp.boss2[i].hp > 0) {
+                    gp.boss2[i].hp -= this.atk;
+
+                }
+            }
+        }
+
+    }
+
     public void update() {
         if (keyH.upPressed == true || keyH.downPressed == true || keyH.leftPressed == true || keyH.rigthPressed == true) {
 
@@ -101,6 +146,35 @@ public class Player extends Entity {
             IscollisionWithOuther = false;
             isCollisionWithEnemy = false;
             gp.cChecker.checkTile(this);
+
+            for (int i = 0; i < gp.boss.length; i++) {
+                if (gp.boss[i] != null) {
+                    if (keyH.atack) {           // só ataca se tecla T foi pressionada
+                        attackBoss();
+                        keyH.atack = false;     // reseta para não atacar de novo até pressionar T novamente
+                    }
+                }
+            }
+
+            for (int i = 0; i < gp.boss2.length; i++) {
+                if (gp.boss2[i] != null) {
+                    if (keyH.atack) {           // só ataca se tecla T foi pressionada
+                        attackBoss();
+                        keyH.atack = false;     // reseta para não atacar de novo até pressionar T novamente
+                    }
+                }
+            }
+
+            for (int i = 0; i < gp.boss.length; i++) {
+                if (gp.boss[i] != null) {
+                    gp.cChecker.checkPlayer(gp.boss[i]);
+                }
+            }
+            for (int i = 0; i < gp.boss2.length; i++) {
+                if (gp.boss2[i] != null) {
+                    gp.cChecker.checkPlayer(gp.boss2[i]);
+                }
+            }
 
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
@@ -174,25 +248,28 @@ public class Player extends Entity {
 
             switch (gp.obj[index].name) {
                 case "ring 1":
-                  
-                    hasRing += 1;
-                    System.out.println("ring 1: " + hasRing);
-                    // logica de enviar para o meu banco de dados
 
-                    if (gp.obj[index] instanceof OBJ_Key) {
-                        OBJ_Key key = (OBJ_Key) gp.obj[index]; // faz o cast para acessar os campos da classe
-                        RingService.postRingRegister(key.nameRing, key.description, 1);
-                        System.out.println("com.mycompany.my2dgame.entity.Player.pickUpObject()");
+                    hasRing += 1;
+
+                    // logica de enviar para o meu banco de dados
+                    if (gp.boss2[0] == null) {
+                        if (gp.obj[index] instanceof OBJ_Key) {
+                            OBJ_Key key = (OBJ_Key) gp.obj[index]; // faz o cast para acessar os campos da classe
+                            RingService.postRingRegister(key.nameRing, key.description, 1);
+
+                            gp.changeMap("/maps/mapa_50x50_dungeon.txt", hasRing);
+
+                            gp.obj[index] = null;
+                        }
+
                     }
-                    
-                    gp.obj[index] = null;
-                    gp.changeMap("/maps/mapa_50x50_dungeon.txt", hasRing);
+
                     break;
 
                 case "ring 2":
                     gp.obj[index] = null;
                     hasRing += 1;
-                    System.out.println("ring 1: " + hasRing);
+
                     break;
                 case "door 1":
                     if (hasKey > 0) {

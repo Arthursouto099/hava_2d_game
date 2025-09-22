@@ -4,6 +4,8 @@
  */
 package com.mycompany.my2dgame;
 
+import com.mycompany.my2dgame.entity.Boss;
+import com.mycompany.my2dgame.entity.Boss2;
 import com.mycompany.my2dgame.entity.Elf;
 import com.mycompany.my2dgame.entity.Player;
 import com.mycompany.my2dgame.tile.TileManager;
@@ -45,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable {
     int FPS = 60;
     TileManager tileM = new TileManager(this);
 
-    KeyHandler keyH = new KeyHandler();
+    public KeyHandler keyH = new KeyHandler();
 
     Thread gameThread;
     public CollisionChecker cChecker = new CollisionChecker(this);
@@ -57,6 +59,9 @@ public class GamePanel extends JPanel implements Runnable {
     public Npc[] npcs = new Npc[10];
     public Elf[] elfs = new Elf[10];
     public Orc[] orcs = new Orc[10];
+    public  Boss[] boss = new Boss[10];
+    public  Boss2[] boss2 = new Boss2[10];
+   
 
     public SuperObject obj[] = new SuperObject[10];
 
@@ -185,6 +190,18 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
         }
+        for (int i = 0; i < this.boss.length; i++) {
+            if (boss[i] != null) {
+                boss[i].update();
+            }
+
+        }
+        for (int i = 0; i < this.boss2.length; i++) {
+            if (boss2[i] != null) {
+                boss2[i].update();
+            }
+
+        }
 
     }
 
@@ -214,6 +231,18 @@ public class GamePanel extends JPanel implements Runnable {
         for (int i = 0; i < this.orcs.length; i++) {
             if (orcs[i] != null) {
                 orcs[i].draw((Graphics2D) g2);
+            }
+
+        }
+        for (int i = 0; i < this.boss.length; i++) {
+            if (boss[i] != null) {
+                boss[i].draw((Graphics2D) g2);
+            }
+
+        }
+        for (int i = 0; i < this.boss2.length; i++) {
+            if (boss2[i] != null) {
+                boss2[i].draw((Graphics2D) g2);
             }
 
         }

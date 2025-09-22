@@ -15,6 +15,7 @@ public class KeyHandler implements  KeyListener{
     
     public boolean upPressed, downPressed, leftPressed, rigthPressed;
     public boolean pausedAction = false;
+    public boolean atack = false;
 
     @Override
     public void keyTyped(KeyEvent e) {
@@ -37,6 +38,10 @@ public class KeyHandler implements  KeyListener{
                 break;
             case KeyEvent.VK_D:
                 rigthPressed = true;
+                break;
+            case KeyEvent.VK_T:
+                System.out.println("atack");
+                this.atack = true;
                 break;
             case KeyEvent.VK_Q:
                 if(pausedAction) {

@@ -20,7 +20,29 @@ public class CollisionChecker {
         this.gp = gp;
 
     }
+    
+    
+    public void checkPlayer(Entity e) {
+    // área do boss
+    e.solidArea.x = e.worldX + e.solidArea.x;
+    e.solidArea.y = e.worldY + e.solidArea.y;
 
+    // área do player
+    gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
+    gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
+
+    if(e.solidArea.intersects(gp.player.solidArea)) {
+        e.colisionOn = true; // trava movimento
+    }
+    
+
+    // resetar posições pra não bugarem depois
+    e.solidArea.x = e.solidAreaDefaultX;
+    e.solidArea.y = e.solidAreaDefaultY;
+    gp.player.solidArea.x = gp.player.solidAreaDefaultX;
+    gp.player.solidArea.y = gp.player.solidAreaDefaultY;
+}
+    
     public void checkEntityColision(Entity entity1, Entity entity2) {
 
     // Pega os limites da área sólida da entity1
