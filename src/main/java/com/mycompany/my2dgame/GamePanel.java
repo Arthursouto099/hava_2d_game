@@ -8,6 +8,7 @@ import com.mycompany.my2dgame.entity.Boss;
 import com.mycompany.my2dgame.entity.Boss2;
 import com.mycompany.my2dgame.entity.Elf;
 import com.mycompany.my2dgame.entity.Player;
+import com.mycompany.my2dgame.entity.PlayerInfo;
 import com.mycompany.my2dgame.tile.TileManager;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -22,6 +23,7 @@ import com.mycompany.my2dgame.object.OBJ_Door;
 import com.mycompany.my2dgame.object.OBJ_Key;
 import com.mycompany.my2dgame.object.OBJ_KeyDoor;
 import com.mycompany.my2dgame.object.SuperObject;
+import com.mycompany.my2dgame.services.PlayerService;
 import java.awt.Font;
 
 /**
@@ -62,9 +64,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Npc[] npcs = new Npc[10];
     public Elf[] elfs = new Elf[10];
     public Orc[] orcs = new Orc[10];
-    public  Boss[] boss = new Boss[10];
-    public  Boss2[] boss2 = new Boss2[10];
-   
+    public Boss[] boss = new Boss[10];
+    public Boss2[] boss2 = new Boss2[10];
 
     public SuperObject obj[] = new SuperObject[10];
 
@@ -77,18 +78,16 @@ public class GamePanel extends JPanel implements Runnable {
         this.setFocusable(true);
 
         this.npcs[0] = new Npc(this, 23, 12);
-        this.npcs[1] = new Npc(this, 11,9);
+        this.npcs[1] = new Npc(this, 11, 9);
 
     }
 
     public void setupGame() {
         aSetter.setObject();
     }
-    
-    
+
     public void resetGame() {
-        
-        
+
         this.player.setdefaultValues();
         obj[0] = new OBJ_Key();
         obj[0].worldX = 41 * tileSize;
@@ -107,9 +106,8 @@ public class GamePanel extends JPanel implements Runnable {
         obj[4] = new OBJ_KeyDoor();
         obj[4].worldX = 10 * tileSize;
         obj[4].worldY = 7 * tileSize;
-        boss2[0] = new Boss2(this, 38, 7) ;
+        boss2[0] = new Boss2(this, 38, 7);
     }
-    
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -275,6 +273,45 @@ public class GamePanel extends JPanel implements Runnable {
             }
 
         }
+
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+
+// Exemplo de estatísticas
+        // CONFIGURAÇÕES DE ESTILO
+        Font hudFont = new Font("Arial", Font.PLAIN, 18);
+        g2.setFont(hudFont);
+        // Texto das estatísticas
+        
+        PlayerInfo info = PlayerService.getPlayerWeb(1);
+
+        
+
+        String vidaText = "name: " + info.getName();
+        String chavesText = "id: " + info.getId();
+        String inimigosText = "Inimigos: " + boss.length;
+
+// Altura da linha e margem
+        int padding = 25;
+        int lineHeight = 25;
+
+// Tamanho da HUD
+        int hudWidth = 350;
+        int hudHeight = (lineHeight * 4) + (padding * 2);
+
+// Posição no canto inferior esquerdo
+        int x = 10;
+        int y = screenHeigth - hudHeight - 10;
+
+// FUNDO PRETO TRANSPARENTE
+        g2.setColor(new Color(0, 0, 0, 170)); // Preto com transparência
+        g2.fillRoundRect(x, y, hudWidth, hudHeight, 15, 15);
+
+// TEXTO BRANCO
+        g2.setColor(Color.WHITE);
+        g2.drawString(vidaText, x + padding, y + padding + lineHeight);
+        g2.drawString(chavesText, x + padding, y + padding + lineHeight * 2);
+        g2.drawString(inimigosText, x + padding, y + padding + lineHeight * 3);
 
         g2.dispose();
 

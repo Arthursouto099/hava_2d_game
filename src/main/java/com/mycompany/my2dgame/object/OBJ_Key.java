@@ -12,8 +12,8 @@ import javax.imageio.ImageIO;
  * @author Usuario
  */
 public class OBJ_Key extends SuperObject{
-    public String nameRing = "Anel do Poder";
-    public String description = "Forjado nas chamas da Montanha da Perdição, concede força inimaginável ao portador, mas também corrompe sua alma.";
+    public String nameRing = "Anel dos Elfos";
+    public String description = "Criado pelos elfos, oferece proteção mística, sabedoria ancestral e conexão com a natureza.";
     
     public OBJ_Key() {
         name = "ring 1";

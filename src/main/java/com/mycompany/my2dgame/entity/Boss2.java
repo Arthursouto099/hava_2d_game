@@ -19,10 +19,10 @@ import javax.imageio.ImageIO;
 public class Boss2 extends Entity {
 
     GamePanel gp;
-    public int hp = 300;   // vida bem maior
-    public int atk = 20;   // dano que tira do player
+    public int hp = 320;   // vida bem maior
+    public int atk = 22;   // dano que tira do player
     int actionLockCounter = 0;
-    public int attackDelay = 1300;
+    public int attackDelay = 1200;
     private long lastAttackTime = 0;
 
     public Boss2(GamePanel gp, int worldXMult, int worldYMult) {
@@ -201,7 +201,7 @@ public class Boss2 extends Entity {
         int barX = gp.screenWidth / 2 - barWidth / 2;
         int barY = 50;
 
-        int currentBarWidth = (int) ((hp / 300.0) * barWidth);
+        int currentBarWidth = (int) ((hp / 320.0) * barWidth);
 
         g2.setColor(Color.black);
         g2.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);

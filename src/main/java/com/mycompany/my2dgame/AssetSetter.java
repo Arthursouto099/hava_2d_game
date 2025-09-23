@@ -49,6 +49,9 @@ public class AssetSetter {
         gp.obj[5] = new OBJ_Key3();
         gp.obj[5].worldX = 7 * gp.tileSize;
         gp.obj[5].worldY = 2 * gp.tileSize;
+        gp.obj[6] = new OBJ_Key2();
+        gp.obj[6].worldX = 11 * gp.tileSize;
+        gp.obj[6].worldY = 36 * gp.tileSize;
         
         
     }
@@ -102,6 +105,9 @@ public class AssetSetter {
         gp.obj[5] = new OBJ_Key3();
         gp.obj[5].worldX = 7 * gp.tileSize;
         gp.obj[5].worldY = 2 * gp.tileSize;
+        gp.obj[6] = new OBJ_Key2();
+        gp.obj[6].worldX = 11 * gp.tileSize;
+        gp.obj[6].worldY = 36 * gp.tileSize;
         
         
         

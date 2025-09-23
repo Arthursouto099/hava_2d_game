@@ -12,6 +12,8 @@ import com.mycompany.my2dgame.GamePanel;
 import com.mycompany.my2dgame.KeyHandler;
 import com.mycompany.my2dgame.object.SuperObject;
 import com.mycompany.my2dgame.object.OBJ_Key;
+import com.mycompany.my2dgame.object.OBJ_Key3;
+import com.mycompany.my2dgame.object.OBJ_Key2;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
@@ -35,6 +37,7 @@ public class Player extends Entity {
     public String dialogText = "";
     public int dialogTimer = 0;
     public Color dialogColor = Color.WHITE;
+    public boolean isFireBuff = false;
     public int hasRing = 0;
     public int hasKey = 0;
 
@@ -50,8 +53,8 @@ public class Player extends Entity {
         solidArea.y = 16;
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
-        solidArea.width = 32;
-        solidArea.height = 32;
+        solidArea.width = 30;
+        solidArea.height = 30;
 
         setdefaultValues();
         getPlayerImage();
@@ -101,7 +104,24 @@ public class Player extends Entity {
                 );
 
                 if (playerArea.intersects(bossArea) && gp.boss[i].hp > 0) {
-                    gp.boss[i].hp -= this.atk;
+
+                    int chance = (int) (Math.random() * 4) + 1;
+
+                    // Define dano base
+                    int dano = this.atk;
+
+                    // Aplica dano de fogo se a chance for 3
+                    if (chance == 3 && isFireBuff == true) {
+                        int danoFogo = 9;
+                        dano += danoFogo;
+                        hp -= 2;
+                        dialogText = "Dano de fogo aplicado";
+                        dialogTimer = 0;
+                    } else {
+                        System.out.println("Dano normal: " + dano);
+                    }
+
+                    gp.boss[i].hp -= dano;
 
                 }
             }
@@ -118,7 +138,23 @@ public class Player extends Entity {
                 );
 
                 if (playerArea.intersects(bossArea) && gp.boss2[i].hp > 0) {
-                    gp.boss2[i].hp -= this.atk;
+                    int chance = (int) (Math.random() * 4) + 1;
+
+                    // Define dano base
+                    int dano = this.atk;
+
+                    // Aplica dano de fogo se a chance for 3
+                    if (chance == 3 && isFireBuff == true) {
+                        int danoFogo = 9;
+                        dano += danoFogo;
+                        hp -= 2;
+                        dialogText = "Dano de fogo aplicado";
+                        dialogTimer = 0;
+                    } else {
+                        System.out.println("Dano normal: " + dano);
+                    }
+
+                    gp.boss2[i].hp -= dano;
 
                 }
             }
@@ -185,6 +221,7 @@ public class Player extends Entity {
                 this.hasRing = 0;
                 this.hasKey = 0;
                 this.atk = 5;
+                this.isFireBuff = false;
                 gp.changeMap("/maps/map01.txt", 0);
 
             }
@@ -260,16 +297,16 @@ public class Player extends Entity {
             switch (gp.obj[index].name) {
                 case "ring 1":
 
-                    hasRing += 1;
-
                     // logica de enviar para o meu banco de dados
                     if (gp.boss2[0] == null) {
+                        hasRing += 1;
+                        dialogText = "Você pegou o anel dos elfos 50 pontos a mais de defesa";
+                        dialogTimer = 0;
+                        hp = hp + 50;
                         if (gp.obj[index] instanceof OBJ_Key) {
                             OBJ_Key key = (OBJ_Key) gp.obj[index]; // faz o cast para acessar os campos da classe
                             RingService.postRingRegister(key.nameRing, key.description, 1);
-
                             gp.changeMap("/maps/mapa_50x50_dungeon.txt", 1);
-
                             gp.obj[index] = null;
                         }
 
@@ -277,12 +314,32 @@ public class Player extends Entity {
 
                     break;
 
+                case "ring 2":
+
+                    dialogText = "Você pegou o anel do fogo, controle o fogo porém perca vida por isso. TUDO TEM UM PREÇO";
+                    dialogTimer = 0;
+                    isFireBuff = true;
+                    hasRing += 1;
+
+                    if (gp.obj[index] instanceof OBJ_Key2) {
+                        OBJ_Key2 key = (OBJ_Key2) gp.obj[index]; // faz o cast para acessar os campos da classe
+                        RingService.postRingRegister(key.nameRing, key.description, 1);
+                        gp.obj[index] = null;
+                    }
+                    break;
+
                 case "ring 3":
-                    gp.obj[index] = null;
+
                     dialogText = "Você pegou o anel do poder! 20+ de dano!";
                     dialogTimer = 0;
                     atk = atk + 20;
                     hasRing += 1;
+
+                    if (gp.obj[index] instanceof OBJ_Key3) {
+                        OBJ_Key3 key = (OBJ_Key3) gp.obj[index]; // faz o cast para acessar os campos da classe
+                        RingService.postRingRegister(key.nameRing, key.description, 1);
+                        gp.obj[index] = null;
+                    }
 
                     break;
                 case "door 1":
@@ -403,7 +460,7 @@ public class Player extends Entity {
         int barY = screenY - 20;
 
 // Calcula a largura proporcional ao HP atual
-        int currentBarWidth = (int) ((hp / 100.0) * barWidth);
+        int currentBarWidth = (int) ((hp / 150.0) * barWidth);
 
 // Fundo (preto)
         g2.setColor(Color.black);

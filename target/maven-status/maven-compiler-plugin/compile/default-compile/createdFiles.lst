@@ -2,6 +2,7 @@ com\mycompany\my2dgame\entity\Boss.class
 com\mycompany\my2dgame\AssetSetter.class
 com\mycompany\my2dgame\object\OBJ_KeyDoor.class
 com\mycompany\my2dgame\object\OBJ_Key3.class
+com\mycompany\my2dgame\entity\PlayerInfo.class
 com\mycompany\my2dgame\object\OBJ_Door.class
 com\mycompany\my2dgame\tile\TileManager.class
 com\mycompany\my2dgame\tile\Tile.class
@@ -11,6 +12,7 @@ com\mycompany\my2dgame\object\OBJ_Key4.class
 com\mycompany\my2dgame\object\OBJ_Key.class
 com\mycompany\my2dgame\entity\Boss2.class
 com\mycompany\my2dgame\entity\Orc.class
+com\mycompany\my2dgame\services\PlayerService.class
 com\mycompany\my2dgame\GamePanel.class
 com\mycompany\my2dgame\My2DGame.class
 com\mycompany\my2dgame\entity\Player.class

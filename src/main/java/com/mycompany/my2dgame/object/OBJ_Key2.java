@@ -12,8 +12,11 @@ import javax.imageio.ImageIO;
  * @author Usuario
  */
 public class OBJ_Key2 extends SuperObject{
+    public String nameRing = "Anel de Fogo";
+    public String description = "Este anel permite controlar o fogo com maestria, mas consome energia vital de quem o usa.";
     public OBJ_Key2() {
         name = "ring 2";
+        
         try {
             image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));
         }
