@@ -18,6 +18,9 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import com.mycompany.my2dgame.entity.Npc;
 import com.mycompany.my2dgame.entity.Orc;
+import com.mycompany.my2dgame.object.OBJ_Door;
+import com.mycompany.my2dgame.object.OBJ_Key;
+import com.mycompany.my2dgame.object.OBJ_KeyDoor;
 import com.mycompany.my2dgame.object.SuperObject;
 import java.awt.Font;
 
@@ -45,7 +48,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // fps
     int FPS = 60;
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
 
     public KeyHandler keyH = new KeyHandler();
 
@@ -81,6 +84,32 @@ public class GamePanel extends JPanel implements Runnable {
     public void setupGame() {
         aSetter.setObject();
     }
+    
+    
+    public void resetGame() {
+        
+        
+        this.player.setdefaultValues();
+        obj[0] = new OBJ_Key();
+        obj[0].worldX = 41 * tileSize;
+        obj[0].worldY = 10 * tileSize;
+        obj[1] = new OBJ_Door();
+        obj[1].name = "door 1";
+        obj[1].worldX = 10 * tileSize;
+        obj[1].worldY = 11 * tileSize;
+        obj[2] = new OBJ_Door();
+        obj[2].name = "door 2";
+        obj[2].worldX = 38 * tileSize;
+        obj[2].worldY = 15 * tileSize;
+        obj[3] = new OBJ_KeyDoor();
+        obj[3].worldX = 11 * tileSize;
+        obj[3].worldY = 39 * tileSize;
+        obj[4] = new OBJ_KeyDoor();
+        obj[4].worldX = 10 * tileSize;
+        obj[4].worldY = 7 * tileSize;
+        boss2[0] = new Boss2(this, 38, 7) ;
+    }
+    
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -171,7 +200,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         // reseta posição do player
         // reseta os NPCs conforme o mapa
-        aSetter.setNPC(1);
+        aSetter.setNPC(mapIndex);
     }
 
     public void update() {

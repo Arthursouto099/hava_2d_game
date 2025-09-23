@@ -45,14 +45,14 @@ public class Boss extends Entity {
 
     public void getBossImage() {
         try {
-            up1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_up_1.png"));
-            up2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_up_2.png"));
-            down1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_down_1.png"));
-            left1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_left_1.png"));
-            left2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_left_1.png"));
-            right1 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_right_1.png"));
-            right2 = ImageIO.read(getClass().getResourceAsStream("/npc/oldman_right_1.png"));
+            up1 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_up_1.png"));
+            up2 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleman_up_2.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_down_1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_down_2.png"));
+            left1 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_left_1.png"));
+            left2 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_left_2.png"));
+            right1 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_right_1.png"));
+            right2 = ImageIO.read(getClass().getResourceAsStream("/boss/purpleoldman_right_2.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -165,7 +165,7 @@ public class Boss extends Entity {
             if (deFrente) {
                 gp.player.hp -= this.atk;
                 this.lastAttackTime = currentTime;
-                System.out.println("Boss atacou de frente!");
+               
             }
 
         }
@@ -195,8 +195,8 @@ public class Boss extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
 
         // Barra de vida
-        int barWidth = 200;
-        int barHeight = 50;
+        int barWidth = 500;
+        int barHeight = 20;
         int barX = gp.screenWidth / 2 - barWidth / 2;
         int barY = 50;
 

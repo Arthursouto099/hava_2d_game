@@ -21,6 +21,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import com.mycompany.my2dgame.services.RingService;
+import java.awt.FontMetrics;
 
 public class Player extends Entity {
 
@@ -30,7 +31,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     public int hp = 100;
-    public int atk = 25;
+    public int atk = 5;
     public String dialogText = "";
     public int dialogTimer = 0;
     public Color dialogColor = Color.WHITE;
@@ -179,6 +180,15 @@ public class Player extends Entity {
             int objIndex = gp.cChecker.checkObject(this, true);
             pickUpObject(objIndex);
 
+            if (this.hp <= 0) {
+                this.hp = 100;
+                this.hasRing = 0;
+                this.hasKey = 0;
+                this.atk = 5;
+                gp.changeMap("/maps/map01.txt", 0);
+
+            }
+
             // checando as colisões com os npcs
             for (int i = 0; i < gp.npcs.length; i++) {
                 if (gp.npcs[i] != null) {
@@ -198,8 +208,9 @@ public class Player extends Entity {
             }
 
             if (IscollisionWithOuther) {
-                dialogText = "?";
-                dialogTimer = 0;
+                gp.npcs[1].dialogNpc = "Vi que você não possui força suficiente, "
+                        + "perto dessa casa existe um anel que te deixara poderoso";
+                gp.npcs[0].dialogNpc = "Vença sua versão maligna e retome o proximo anel";
 
             }
 
@@ -257,7 +268,7 @@ public class Player extends Entity {
                             OBJ_Key key = (OBJ_Key) gp.obj[index]; // faz o cast para acessar os campos da classe
                             RingService.postRingRegister(key.nameRing, key.description, 1);
 
-                            gp.changeMap("/maps/mapa_50x50_dungeon.txt", hasRing);
+                            gp.changeMap("/maps/mapa_50x50_dungeon.txt", 1);
 
                             gp.obj[index] = null;
                         }
@@ -266,8 +277,11 @@ public class Player extends Entity {
 
                     break;
 
-                case "ring 2":
+                case "ring 3":
                     gp.obj[index] = null;
+                    dialogText = "Você pegou o anel do poder! 20+ de dano!";
+                    dialogTimer = 0;
+                    atk = atk + 20;
                     hasRing += 1;
 
                     break;
@@ -304,7 +318,7 @@ public class Player extends Entity {
 
         BufferedImage image = null;
         dialogTimer++;
-        if (dialogTimer > 60) { // aqui 60 frames = 1 segundo se rodando a 60fps
+        if (dialogTimer > 90) { // aqui 60 frames = 1 segundo se rodando a 60fps
             dialogText = "";
             dialogTimer = 0;
             dialogColor = Color.WHITE;
@@ -351,10 +365,34 @@ public class Player extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
         if (!dialogText.isEmpty()) {
-            g2.setColor(dialogColor);
             g2.setFont(new Font("Arial", Font.BOLD, 15));
-            int textWidth = g2.getFontMetrics().stringWidth(dialogText);
-            g2.drawString(dialogText, screenX + gp.tileSize / 2 - textWidth / 2, screenY - 40);
+            FontMetrics fm = g2.getFontMetrics();
+
+            int textWidth = fm.stringWidth(dialogText);
+            int textHeight = fm.getHeight();
+
+            // Definição da caixa de fundo
+            int padding = 8; // margem interna
+            int boxX = screenX + gp.tileSize / 2 - textWidth / 2 - padding;
+            int boxY = screenY - 40 - textHeight;
+            int boxWidth = textWidth + padding * 2;
+            int boxHeight = textHeight + padding * 2;
+
+            // Fundo (preto translúcido)
+            g2.setColor(new Color(0, 0, 0, 180));
+            g2.fillRoundRect(boxX, boxY, boxWidth, boxHeight, 10, 10);
+
+            // Borda
+            g2.setColor(Color.WHITE);
+            g2.drawRoundRect(boxX, boxY, boxWidth, boxHeight, 10, 10);
+
+            // Texto
+            g2.setColor(dialogColor);
+            g2.drawString(
+                    dialogText,
+                    screenX + gp.tileSize / 2 - textWidth / 2,
+                    screenY - 40
+            );
         }
 
         // === Desenhar barra de vida ===

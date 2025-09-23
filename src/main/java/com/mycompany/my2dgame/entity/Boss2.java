@@ -196,8 +196,8 @@ public class Boss2 extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
 
         // Barra de vida
-        int barWidth = 200;
-        int barHeight = 50;
+        int barWidth = 500;
+        int barHeight = 20;
         int barX = gp.screenWidth / 2 - barWidth / 2;
         int barY = 50;
 
