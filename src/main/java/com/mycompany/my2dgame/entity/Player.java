@@ -24,16 +24,19 @@ import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;
 import com.mycompany.my2dgame.services.RingService;
 import java.awt.FontMetrics;
+import com.mycompany.my2dgame.services.PlayerService;
 
 public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
 
+    public boolean isDead = false;
     public final int screenX;
     public final int screenY;
-    public int hp = 100;
-    public int atk = 5;
+    public int hpMax;
+    public int hp = 1;
+    public int atk = 1;
     public String dialogText = "";
     public int dialogTimer = 0;
     public Color dialogColor = Color.WHITE;
@@ -217,12 +220,14 @@ public class Player extends Entity {
             pickUpObject(objIndex);
 
             if (this.hp <= 0) {
-                this.hp = 100;
+
+                this.hp = 1;
                 this.hasRing = 0;
                 this.hasKey = 0;
-                this.atk = 5;
+                this.atk = 1;
                 this.isFireBuff = false;
                 gp.changeMap("/maps/map01.txt", 0);
+                PlayerService.incrementDeathsWeb(1);
 
             }
 
@@ -303,6 +308,7 @@ public class Player extends Entity {
                         dialogText = "Você pegou o anel dos elfos 50 pontos a mais de defesa";
                         dialogTimer = 0;
                         hp = hp + 50;
+                        hpMax = hpMax += 50;
                         if (gp.obj[index] instanceof OBJ_Key) {
                             OBJ_Key key = (OBJ_Key) gp.obj[index]; // faz o cast para acessar os campos da classe
                             RingService.postRingRegister(key.nameRing, key.description, 1);
@@ -455,22 +461,19 @@ public class Player extends Entity {
         // === Desenhar barra de vida ===
 // Tamanho máximo da barra
         int barWidth = 50;  // largura total da barra
-        int barHeight = 10;  // altura da barra
+        int barHeight = 10;
         int barX = screenX;
         int barY = screenY - 20;
 
-// Calcula a largura proporcional ao HP atual
-        int currentBarWidth = (int) ((hp / 150.0) * barWidth);
+// calcula largura proporcional
+        int currentBarWidth = (int) (((double) hp / hpMax) * barWidth);
 
-// Fundo (preto)
         g2.setColor(Color.black);
         g2.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
 
-// Vida atual (vermelho)
         g2.setColor(Color.red);
         g2.fillRect(barX, barY, currentBarWidth, barHeight);
 
-// Borda opcional
         g2.setColor(Color.white);
         g2.drawRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
 

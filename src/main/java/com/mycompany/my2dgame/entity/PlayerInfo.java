@@ -13,11 +13,30 @@ public class PlayerInfo {
     private String name;
     private int health;
     private int attack;
+    private int  deaths;
+    private int defeatedBosses;
+    
 
     public PlayerInfo() {}
 
     public int getId() {
         return id;
+    }
+    
+    public int getDeaths() {
+        return this.deaths;
+    }
+    
+    public void setDeaths(int deaths) {
+       this.deaths = deaths;
+    }
+    
+    public int getDefeatedBosses() {
+        return this.defeatedBosses;
+    }
+    
+    public void setDefeatedBosses(int defeatBosses) {
+       this.defeatedBosses = defeatBosses;
     }
 
     public void setId(int id) {

@@ -17,6 +17,69 @@ import com.fasterxml.jackson.databind.JsonNode;
  * @author ARTHURSANTOSTAVARESS
  */
 public class PlayerService {
+    
+    public static PlayerInfo incrementDeathsWeb(int id) {
+    try {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3307/character/" + id))
+                .header("Content-Type", "application/json")
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}")) // PATCH com body vazio
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Status HTTP: " + response.statusCode());
+        System.out.println("Resposta do servidor: " + response.body());
+
+        if (response.statusCode() == 200) {
+            ObjectMapper mapper = new ObjectMapper();
+            // resposta já é o objeto atualizado do personagem
+            System.out.println("realizado com sucesso");
+        } else {
+            System.err.println("❌ Erro na requisição. Status: " + response.statusCode());
+        }
+
+    } catch (Exception e) {
+        System.err.println("❌ Erro ao incrementar deaths:");
+        e.printStackTrace();
+    }
+
+    return null;
+}
+    
+    public static PlayerInfo incrementDefeatedBossessWeb(int id) {
+    try {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create("http://localhost:3307/character/defeated/" + id))
+                .header("Content-Type", "application/json")
+                .method("PATCH", HttpRequest.BodyPublishers.ofString("{}")) // PATCH com body vazio
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("Status HTTP: " + response.statusCode());
+        System.out.println("Resposta do servidor: " + response.body());
+
+        if (response.statusCode() == 200) {
+            ObjectMapper mapper = new ObjectMapper();
+            // resposta já é o objeto atualizado do personagem
+            System.out.println("realizado com sucesso");
+        } else {
+            System.err.println("❌ Erro na requisição. Status: " + response.statusCode());
+        }
+
+    } catch (Exception e) {
+        System.err.println("❌ Erro ao incrementar deaths:");
+        e.printStackTrace();
+    }
+
+    return null;
+}
+
    
     
     public static PlayerInfo getPlayerWeb(int id) {

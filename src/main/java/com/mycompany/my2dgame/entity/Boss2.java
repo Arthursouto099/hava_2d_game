@@ -11,6 +11,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import javax.imageio.ImageIO;
+import com.mycompany.my2dgame.services.PlayerService;
 
 /**
  *
@@ -19,10 +20,12 @@ import javax.imageio.ImageIO;
 public class Boss2 extends Entity {
 
     GamePanel gp;
-    public int hp = 320;   // vida bem maior
+    // vida bem maior
     public int atk = 22;   // dano que tira do player
+    public int hpMax = 320;
+    public int hp = hpMax;
     int actionLockCounter = 0;
-    public int attackDelay = 1200;
+    public int attackDelay = 700;
     private long lastAttackTime = 0;
 
     public Boss2(GamePanel gp, int worldXMult, int worldYMult) {
@@ -31,8 +34,8 @@ public class Boss2 extends Entity {
         solidArea = new Rectangle();
         solidArea.x = 0;
         solidArea.y = 16;
-        solidArea.width = 48;
-        solidArea.height = 48;
+        solidArea.width = 48 * 2;
+        solidArea.height = 48 * 2;
 
         worldX = gp.tileSize * worldXMult;
         worldY = gp.tileSize * worldYMult;
@@ -55,7 +58,7 @@ public class Boss2 extends Entity {
             right2 = ImageIO.read(getClass().getResourceAsStream("/boss2/reverseboy_right_2.png"));
         } catch (IOException e) {
             e.printStackTrace();
-            
+
         }
     }
 
@@ -66,8 +69,9 @@ public class Boss2 extends Entity {
         int dy = gp.player.worldY - worldY;
 
         if (this.hp <= 0) {
+            PlayerService.incrementDefeatedBossessWeb(1);
             gp.boss2[0] = null;
-            this.gp.player.hp = 100;
+            this.gp.player.hp += 30;
         }
 
         actionLockCounter++; // aumenta o contador a cada frame
@@ -123,52 +127,50 @@ public class Boss2 extends Entity {
     }
 
     public void attackPlayer() {
-        long currentTime = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
 
-        Rectangle bossArea = new Rectangle(worldX, worldY, solidArea.width, solidArea.height);
-        Rectangle playerArea = new Rectangle(
-                gp.player.worldX,
-                gp.player.worldY,
+        if (gp.player.hp <= 0 || (now - lastAttackTime) < attackDelay) {
+            return;
+        }
+
+        // Corpo real considerando offsets do solidArea
+        Rectangle bossBody = new Rectangle(
+                this.worldX + this.solidArea.x,
+                this.worldY + this.solidArea.y,
+                this.solidArea.width,
+                this.solidArea.height
+        );
+
+        Rectangle playerBody = new Rectangle(
+                gp.player.worldX + gp.player.solidArea.x,
+                gp.player.worldY + gp.player.solidArea.y,
                 gp.player.solidArea.width,
                 gp.player.solidArea.height
         );
 
-        if (bossArea.intersects(playerArea)
-                && (currentTime - lastAttackTime >= attackDelay)
-                && gp.player.hp > 0) {
+        // Hitbox do golpe à frente do boss
+        int reach = gp.tileSize / 2; // ajuste fino
+        Rectangle hitbox;
 
-            // Checa se o Boss está de frente para o Player
-            boolean deFrente = false;
+        switch (this.direction) {
+            case "up":
+                hitbox = new Rectangle(bossBody.x, bossBody.y - reach, bossBody.width, reach);
+                break;
+            case "down":
+                hitbox = new Rectangle(bossBody.x, bossBody.y + bossBody.height, bossBody.width, reach);
+                break;
+            case "left":
+                hitbox = new Rectangle(bossBody.x - reach, bossBody.y, reach, bossBody.height);
+                break;
+            default: // "right"
+                hitbox = new Rectangle(bossBody.x + bossBody.width, bossBody.y, reach, bossBody.height);
+                break;
+        }
 
-            switch (this.direction) {
-                case "up":
-                    if (gp.player.worldY < this.worldY) {
-                        deFrente = true;
-                    }
-                    break;
-                case "down":
-                    if (gp.player.worldY > this.worldY) {
-                        deFrente = true;
-                    }
-                    break;
-                case "left":
-                    if (gp.player.worldX < this.worldX) {
-                        deFrente = true;
-                    }
-                    break;
-                case "right":
-                    if (gp.player.worldX > this.worldX) {
-                        deFrente = true;
-                    }
-                    break;
-            }
-
-            if (deFrente) {
-                gp.player.hp -= this.atk;
-                this.lastAttackTime = currentTime;
-                System.out.println("Boss atacou de frente!");
-            }
-
+        if (hitbox.intersects(playerBody)) {
+            gp.player.hp -= this.atk;
+            lastAttackTime = now;
+            System.out.println("Boss acertou!");
         }
     }
 
@@ -196,12 +198,13 @@ public class Boss2 extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
 
         // Barra de vida
-        int barWidth = 500;
-        int barHeight = 20;
-        int barX = gp.screenWidth / 2 - barWidth / 2;
-        int barY = 50;
+        int barWidth = 50;  // largura total da barra
+        int barHeight = 10;
+        int barX = screenX;
+        int barY = screenY - 20;
 
-        int currentBarWidth = (int) ((hp / 320.0) * barWidth);
+// calcula largura proporcional
+        int currentBarWidth = (int) (((double) hp / hpMax) * barWidth);
 
         g2.setColor(Color.black);
         g2.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);

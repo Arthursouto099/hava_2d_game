@@ -114,7 +114,8 @@ public class AssetSetter {
         gp.npcs[0] = new Npc(gp, 23, 12);
         gp.npcs[1] = new Npc(gp, 11,9);
 
-        gp.boss2[0] = new Boss2(gp, 38, 7);
+        gp.boss2[0] = new Boss2(gp, 38, 10);
+        
         
         
     }
@@ -142,6 +143,11 @@ public class AssetSetter {
         gp.player.worldY = 7 * gp.tileSize;
 
         gp.boss[0] = new Boss(gp, 23, 12);
+        gp.boss[1] = new Boss(gp, 25, 16);
+        gp.boss[1].hp = 250;
+        gp.boss[1].attackDelay = 100;
+        gp.boss[1].atk = 3;
+        gp.boss[1].metaActionCounter = 50;
     }
 
     if (mapIndex == 2) {

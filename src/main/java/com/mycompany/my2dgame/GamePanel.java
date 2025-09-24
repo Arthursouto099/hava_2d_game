@@ -25,6 +25,9 @@ import com.mycompany.my2dgame.object.OBJ_KeyDoor;
 import com.mycompany.my2dgame.object.SuperObject;
 import com.mycompany.my2dgame.services.PlayerService;
 import java.awt.Font;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
@@ -40,6 +43,9 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxScreenRow = 12; // vertical
     public final int screenWidth = tileSize * maxScreenCol; // 760 pixels
     public final int screenHeigth = tileSize * maxScreenRow; // 576 pixels
+    public int requestAtkAndHealth = 0;
+    public PlayerInfo playerInfo;
+    public ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     // configurações do mundo
     public final int maxWorldCol = 50;
@@ -79,6 +85,19 @@ public class GamePanel extends JPanel implements Runnable {
 
         this.npcs[0] = new Npc(this, 23, 12);
         this.npcs[1] = new Npc(this, 11, 9);
+
+        scheduler.scheduleAtFixedRate(() -> {
+            PlayerInfo info = PlayerService.getPlayerWeb(1);
+            if (info != null) {
+                if (this.player.atk == 1 && this.player.hp == 1) {
+                    this.player.atk = info.getAttack();
+                    this.player.hpMax = info.getHealth();
+                    this.player.hp = info.getHealth();
+                }
+                this.playerInfo = info;
+            }
+
+        }, 0, 3, TimeUnit.SECONDS);
 
     }
 
@@ -128,6 +147,7 @@ public class GamePanel extends JPanel implements Runnable {
 //        while (gameThread != null) {
 //
 
+    
     ////            long currentTime = System.nanoTime();
 ////            System.out.println("Current Time: " +  currentTime );
 //            // 1 UPDATE: Informações sobre o personagem e posições
@@ -195,6 +215,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public void changeMap(String mapFile, int mapIndex) {
         tileM.loadMap(mapFile);
+      
 
         // reseta posição do player
         // reseta os NPCs conforme o mapa
@@ -282,36 +303,39 @@ public class GamePanel extends JPanel implements Runnable {
         Font hudFont = new Font("Arial", Font.PLAIN, 18);
         g2.setFont(hudFont);
         // Texto das estatísticas
-        
-        PlayerInfo info = PlayerService.getPlayerWeb(1);
 
-        
-
-        String vidaText = "name: " + info.getName();
-        String chavesText = "id: " + info.getId();
-        String inimigosText = "Inimigos: " + boss.length;
+        PlayerInfo info = this.playerInfo;
+        if (info != null) {
+            String idText = "id: " + info.getId();
+            String vidaText = "name: " + info.getName();
+            String deathsText = "deaths: " + info.getDeaths();
+            String atkText = "atk: " + this.player.atk;
+            String hpText = "hp: " + this.player.hp;
 
 // Altura da linha e margem
-        int padding = 25;
-        int lineHeight = 25;
+            int padding = 25;
+            int lineHeight = 25;
 
 // Tamanho da HUD
-        int hudWidth = 350;
-        int hudHeight = (lineHeight * 4) + (padding * 2);
+            int hudWidth = 350;
+            int hudHeight = (lineHeight * 5) + (padding * 2);
 
 // Posição no canto inferior esquerdo
-        int x = 10;
-        int y = screenHeigth - hudHeight - 10;
+            int x = 10;
+            int y = screenHeigth - hudHeight - 10;
 
 // FUNDO PRETO TRANSPARENTE
-        g2.setColor(new Color(0, 0, 0, 170)); // Preto com transparência
-        g2.fillRoundRect(x, y, hudWidth, hudHeight, 15, 15);
+            g2.setColor(new Color(0, 0, 0, 170)); // Preto com transparência
+            g2.fillRoundRect(x, y, hudWidth, hudHeight, 15, 15);
 
 // TEXTO BRANCO
-        g2.setColor(Color.WHITE);
-        g2.drawString(vidaText, x + padding, y + padding + lineHeight);
-        g2.drawString(chavesText, x + padding, y + padding + lineHeight * 2);
-        g2.drawString(inimigosText, x + padding, y + padding + lineHeight * 3);
+            g2.setColor(Color.WHITE);
+            g2.drawString(idText, x + padding, y + padding + lineHeight);
+            g2.drawString(vidaText, x + padding, y + padding + lineHeight * 2);
+            g2.drawString(deathsText, x + padding, y + padding + lineHeight * 3);
+            g2.drawString(atkText, x + padding, y + padding + lineHeight * 4);
+            g2.drawString(hpText, x + padding, y + padding + lineHeight * 5);
+        }
 
         g2.dispose();
 

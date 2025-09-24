@@ -5,6 +5,7 @@
 package com.mycompany.my2dgame.entity;
 
 import com.mycompany.my2dgame.GamePanel;
+import com.mycompany.my2dgame.services.PlayerService;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
@@ -19,9 +20,11 @@ import javax.imageio.ImageIO;
 public class Boss extends Entity {
 
     GamePanel gp;
-    public int hp = 500;   // vida bem maior
+    public int hpMax = 500;
+    public int hp = hpMax;   // vida bem maior
     public int atk = 27;   // dano que tira do player
     int actionLockCounter = 0;
+    public int metaActionCounter = 10;
     public int attackDelay = 750;
     private long lastAttackTime = 0;
 
@@ -31,8 +34,8 @@ public class Boss extends Entity {
         solidArea = new Rectangle();
         solidArea.x = 0;
         solidArea.y = 16;
-        solidArea.width = 48;
-        solidArea.height = 48;
+        solidArea.width = 48 * 2;
+        solidArea.height = 48 * 2;
 
         worldX = gp.tileSize * worldXMult;
         worldY = gp.tileSize * worldYMult;
@@ -64,15 +67,22 @@ public class Boss extends Entity {
         int dx = gp.player.worldX - worldX;
         int dy = gp.player.worldY - worldY;
 
-        if (this.hp <= 0) {
+        if (gp.boss[0] != null && gp.boss[0].hp <= 0) {
+            PlayerService.incrementDefeatedBossessWeb(1);
+            this.gp.player.hp += 50;
             gp.boss[0] = null;
-            this.gp.player.hp = 100;
+        }
+
+        if (gp.boss[1] != null && gp.boss[1].hp <= 0) {
+            PlayerService.incrementDefeatedBossessWeb(1);
+            this.gp.player.hp += 50;
+            gp.boss[1] = null;
         }
 
         actionLockCounter++; // aumenta o contador a cada frame
 
         // Só muda de direção se o contador passar do limite (ex: 30 frames = 0.5s se rodando a 60fps)
-        if (actionLockCounter > 10) {
+        if (actionLockCounter > metaActionCounter) {
             if (Math.abs(dx) > Math.abs(dy)) {
                 if (dx > 0) {
                     direction = "right";
@@ -122,52 +132,49 @@ public class Boss extends Entity {
     }
 
     public void attackPlayer() {
-        long currentTime = System.currentTimeMillis();
+        long now = System.currentTimeMillis();
+        if (gp.player.hp <= 0 || (now - lastAttackTime) < attackDelay) {
+            return;
+        }
 
-        Rectangle bossArea = new Rectangle(worldX, worldY, solidArea.width, solidArea.height);
-        Rectangle playerArea = new Rectangle(
-                gp.player.worldX,
-                gp.player.worldY,
+        // Corpo real considerando offsets do solidArea
+        Rectangle bossBody = new Rectangle(
+                this.worldX + this.solidArea.x,
+                this.worldY + this.solidArea.y,
+                this.solidArea.width,
+                this.solidArea.height
+        );
+
+        Rectangle playerBody = new Rectangle(
+                gp.player.worldX + gp.player.solidArea.x,
+                gp.player.worldY + gp.player.solidArea.y,
                 gp.player.solidArea.width,
                 gp.player.solidArea.height
         );
 
-        if (bossArea.intersects(playerArea)
-                && (currentTime - lastAttackTime >= attackDelay)
-                && gp.player.hp > 0) {
+        // Hitbox do golpe à frente do boss
+        int reach = gp.tileSize / 2; // ajuste fino
+        Rectangle hitbox;
 
-            // Checa se o Boss está de frente para o Player
-            boolean deFrente = false;
+        switch (this.direction) {
+            case "up":
+                hitbox = new Rectangle(bossBody.x, bossBody.y - reach, bossBody.width, reach);
+                break;
+            case "down":
+                hitbox = new Rectangle(bossBody.x, bossBody.y + bossBody.height, bossBody.width, reach);
+                break;
+            case "left":
+                hitbox = new Rectangle(bossBody.x - reach, bossBody.y, reach, bossBody.height);
+                break;
+            default: // "right"
+                hitbox = new Rectangle(bossBody.x + bossBody.width, bossBody.y, reach, bossBody.height);
+                break;
+        }
 
-            switch (this.direction) {
-                case "up":
-                    if (gp.player.worldY < this.worldY) {
-                        deFrente = true;
-                    }
-                    break;
-                case "down":
-                    if (gp.player.worldY > this.worldY) {
-                        deFrente = true;
-                    }
-                    break;
-                case "left":
-                    if (gp.player.worldX < this.worldX) {
-                        deFrente = true;
-                    }
-                    break;
-                case "right":
-                    if (gp.player.worldX > this.worldX) {
-                        deFrente = true;
-                    }
-                    break;
-            }
-
-            if (deFrente) {
-                gp.player.hp -= this.atk;
-                this.lastAttackTime = currentTime;
-               
-            }
-
+        if (hitbox.intersects(playerBody)) {
+            gp.player.hp -= this.atk;
+            lastAttackTime = now;
+            System.out.println("Boss acertou!");
         }
     }
 
@@ -195,12 +202,13 @@ public class Boss extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
 
         // Barra de vida
-        int barWidth = 500;
-        int barHeight = 20;
-        int barX = gp.screenWidth / 2 - barWidth / 2;
-        int barY = 50;
+        int barWidth = 50;  // largura total da barra
+        int barHeight = 10;
+        int barX = screenX;
+        int barY = screenY - 20;
 
-        int currentBarWidth = (int) ((hp / 500.0) * barWidth);
+// calcula largura proporcional
+        int currentBarWidth = (int) (((double) hp / hpMax) * barWidth);
 
         g2.setColor(Color.black);
         g2.fillRect(barX - 1, barY - 1, barWidth + 2, barHeight + 2);
